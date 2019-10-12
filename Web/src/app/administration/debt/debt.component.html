@@ -1,0 +1,60 @@
+<h1 mat-dialog-title>{{editable ? 'Editar' : 'Agregar'}} usuario {{editable ? usuario : ''}}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="form" class="form-container">
+        <mat-form-field>
+          <input matInput readonly formControlName="contributorId" placeholder="Contribuyente">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput readonly formControlName="rfc" placeholder="RFC">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput readonly formControlName="name" placeholder="Nombre">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Obligación" formControlName="obligationId" required>
+            <mat-option *ngFor="let ob of obligations" [value]="ob.obligationId">
+              {{ob.description}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Tipo de adeudo" formControlName="type" required>
+            <mat-option [value]="1">Multa</mat-option>
+            <mat-option [value]="2">Liquidación</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Tipo de impuesto" formControlName="taxType" required>
+            <mat-option [value]="1">Federal</mat-option>
+            <mat-option [value]="2">Estatal</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Origen" formControlName="origin" required>
+            <mat-option [value]="1">Auditoría</mat-option>
+            <mat-option [value]="2">Vigilancia de operaciones</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput formControlName="total" placeholder="Total">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput formControlName="validity" [matDatepicker]="picker" placeholder="Vigencia">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select formControlName="status" placeholder="Situación del adeudo" required>
+            <mat-option [value]="1">En Proceso de notificación</mat-option>
+            <mat-option [value]="2">Notificado</mat-option>
+            <mat-option [value]="3">En Proceso de cobro</mat-option>
+            <mat-option [value]="4">Controvertido</mat-option>
+            <mat-option [value]="4">Pagado</mat-option>
+          </mat-select>
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-button color="warn" (click)="close()">Cerrar</button>
+    <button mat-button color="primary" (click)="enviar()">Guardar</button>
+</div>

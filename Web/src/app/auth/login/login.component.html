@@ -1,0 +1,22 @@
+<div class="login-container">
+  <div class="login-form mat-elevation-z8">
+      <div class="header-login">
+          <h1 color="primary" class="mat-display-1">Bienvenido</h1>
+      </div>
+      <form [formGroup]="form" (ngSubmit)="login()">
+          <div class="form-container">
+              <mat-form-field appearance="outline">
+                  <mat-icon matPrefix>person</mat-icon>
+                  <mat-label>&nbsp;&nbsp;Usuario</mat-label>
+                  <input formControlName="username" matInput>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                  <mat-icon matPrefix>vpn_key</mat-icon>
+                  <mat-label>&nbsp;&nbsp;Contraseña</mat-label>
+                  <input formControlName="password" matInput type="password">
+              </mat-form-field>
+              <button mat-flat-button type="submit" color="primary">ACCEDER</button>
+          </div>
+      </form>
+  </div>
+</div>

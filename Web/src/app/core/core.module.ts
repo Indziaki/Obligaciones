@@ -20,6 +20,7 @@ import { MenuComponent } from './menu/menu.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -41,6 +42,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatSelectModule,
     MatDialogModule,
     MatDatepickerModule,
+    ReactiveFormsModule,
+    FormsModule,
     MatMenuModule,
     MatTabsModule,
     LayoutModule,
@@ -55,6 +58,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatCardModule,
     MatTableModule,
     MatPaginatorModule,
+    ReactiveFormsModule,
+    FormsModule,
     MatChipsModule,
     MatFormFieldModule,
     MatInputModule,

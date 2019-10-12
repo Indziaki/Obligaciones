@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Obligaciones.Helpers;
 using Obligaciones.Models;
 using Obligaciones.Repositories;
 
@@ -12,15 +18,18 @@ using Obligaciones.Repositories;
 
 namespace Obligaciones.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class UserController : GenericController<User>
     {
         private readonly IUserRepository _repository;
         private readonly IWorkLoadRepository _wlRepository;
-        public UserController(IUserRepository repository, IWorkLoadRepository wlRepository) : base(repository)
+        private readonly AppSettings _settings;
+        public UserController(IUserRepository repository, IWorkLoadRepository wlRepository, IOptions<AppSettings> settings) : base(repository)
         {
             _repository = repository;
             _wlRepository = wlRepository;
+            _settings = settings.Value;
         }
 
         public override Task<ActionResult<User>> Post([FromBody] User model)
@@ -29,13 +38,14 @@ namespace Obligaciones.Controllers
             return base.Post(model);
         }
 
+        [AllowAnonymous]
         [HttpPost("Authenticate")]
         public async Task<ActionResult> Authenticate([FromBody] Login model)
         {
             try
             {
                 var user = await _repository.GetByUserName(model.Username);
-                if (user.Password.Equals(sha256(model.Password))) return Ok(new { message = "Success" });
+                if (user.Password.Equals(sha256(model.Password))) return Ok(new { Token = GenerateJwtToken(user.UserId, user.Username) });
                 else throw new Exception("Usuario y contraseña inválidos");
             }
             catch (Exception ex)
@@ -105,6 +115,30 @@ namespace Obligaciones.Controllers
                 hash += theByte.ToString("x2");
             }
             return hash;
+        }
+        private string GenerateJwtToken(long userId, string name)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, name),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, userId.ToString()),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_settings.Secret));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.Now.AddMinutes(Convert.ToDouble(90));
+
+            var token = new JwtSecurityToken(
+                _settings.Issuer,
+                _settings.Issuer,
+                claims,
+                expires: expires,
+                signingCredentials: creds,
+                notBefore: DateTime.Now
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

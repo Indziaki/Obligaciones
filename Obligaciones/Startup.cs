@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -13,6 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Obligaciones.Helpers;
 using Obligaciones.Models;
 using Obligaciones.Repositories;
 using Swashbuckle.AspNetCore.Swagger;
@@ -42,6 +46,26 @@ namespace Obligaciones
             services.AddTransient<IObligationRepository, ObligationRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IWorkLoadRepository, WorkLoadRepository>();
+
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidIssuer = appSettings.Issuer,
+                    ValidAudience = appSettings.Issuer
+                };
+            });
             services.AddSwaggerGen(s =>
             {
                 s.SwaggerDoc("v1", new Info { Title = "Obligaciones API", Description = "Obligaciones API" });

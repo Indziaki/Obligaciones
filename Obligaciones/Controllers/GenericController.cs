@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Obligaciones.Repositories;
 
@@ -9,6 +13,7 @@ using Obligaciones.Repositories;
 
 namespace Obligaciones.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     public class GenericController<U> : Controller where U : class
     {
@@ -91,6 +96,23 @@ namespace Obligaciones.Controllers
             {
                 
                 return StatusCode(500, ex.Message);
+            }
+        }
+        protected long getUser()
+        {
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                if (identity != null)
+                {
+                    var id = identity.FindFirst(JwtRegisteredClaimNames.UniqueName)?.Value;
+                    return long.Parse(id);
+                }
+                return 0;
+            }
+            catch (Exception e)
+            {
+                return 0;
             }
         }
     }
