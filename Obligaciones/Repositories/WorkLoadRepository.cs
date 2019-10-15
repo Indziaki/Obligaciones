@@ -32,5 +32,13 @@ namespace Obligaciones.Repositories
             var result = await _context.SaveChangesAsync();
             return result > 0;
         }
+
+        public async Task<bool> UpdateRegistry(long id)
+        {
+            var registry = await _context.WorkLoadRegistries.FindAsync(id);
+            registry.Complete = true;
+            var result = await _context.SaveChangesAsync();
+            return result > 0;
+        }
     }
 }

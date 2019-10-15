@@ -15,7 +15,9 @@ export class WorkLoadsComponent implements OnInit {
   dataSource: MatTableDataSource<any>;
   dataSource2: MatTableDataSource<any>;
 
-  public doctors: any[] = [];
+  public types: any[] = [
+    {id: 1, name: 'Registro de adeudo'}
+  ];
 
   displayedColumns: string[] = ['name', 'rfc', 'type', 'createdAt', 'actions'];
   displayedColumns2: string[] = ['name', 'rfc', 'type', 'createdAt'];
@@ -39,15 +41,19 @@ export class WorkLoadsComponent implements OnInit {
     })
   }
 
-  addDebt(item){
+  addDebt(id, item){
     this._dialog.open(DebtComponent, {
       width: '500px',
-      data: item.contributorId
+      data: { contributorId : item.contributorId, id: id }
     }).afterClosed().subscribe(
       res => {
         this.getAll()
       }
     );
+  }
+
+  getType(id){
+    return this.types.find(x=>x.id==id).name
   }
 
 }

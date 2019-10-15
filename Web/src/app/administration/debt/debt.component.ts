@@ -1,7 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { WorkLoadService } from '../services/work-load.service';
+import { PreviewComponent } from '../preview/preview.component';
 
 @Component({
   selector: 'app-debt',
@@ -32,10 +33,12 @@ export class DebtComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<DebtComponent>,
     private _service: WorkLoadService,
+    private _dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
     ) {
       if(data) {
-        this.contributorId = data
+        this.contributorId = data.contributorId
+        this.id = data.id
       }
     }
 
@@ -64,17 +67,23 @@ export class DebtComponent implements OnInit {
 
   enviar(){
     let model = this.form.value;
-    /* if(!this.editable){
-      this._service.addUser(model).subscribe((res: any)=>{
-        this.toastr.success(res.message)
+    if(this.form.valid){
+      this._service.addDebt(this.id, model).subscribe((res: any)=>{
         this.dialogRef.close(true);
       })
     }
-    else{
-      this._service.updateUser(this.userId, model).subscribe((res: any)=>{
-        this.toastr.success(res.message)
-        this.dialogRef.close(true);
-      })
-    } */
+  }
+
+  preview(){
+    let model = this.form.value
+    model.obligation = this.obligations.find(x=>x.obligationId = model.obligationId)
+    this._dialog.open(PreviewComponent, {
+      width: '800px',
+      data: model
+    }).afterClosed().subscribe(
+      res => {
+        if(res) console.log(this.form.value)
+      }
+    );
   }
 }

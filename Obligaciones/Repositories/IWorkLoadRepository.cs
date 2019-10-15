@@ -8,5 +8,6 @@ namespace Obligaciones.Repositories
     public interface IWorkLoadRepository : IGenericRepository<WorkLoad>
     {
         Task<bool> AddRegistries(long id, IEnumerable<WorkLoadRegistry> registries);
+        Task<bool> UpdateRegistry (long id);
     }
 }

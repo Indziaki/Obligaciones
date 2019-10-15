@@ -31,4 +31,7 @@ export class WorkLoadService {
   addRegistros(id, model){
     return this._http.post(`${this.api}/Carga/Registros/${id}`, model)
   }
+  addDebt(id, model){
+    return this._http.post(`${this.apiOb}/Adeudo/${id}`, model)
+  }
 }

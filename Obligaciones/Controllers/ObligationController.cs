@@ -17,17 +17,20 @@ namespace Obligaciones.Controllers
     {
         private readonly IObligationRepository _repository;
         private readonly IDebtRepository _debtRepository;
-        public ObligationController(IObligationRepository repository, IDebtRepository debtRepository) : base(repository)
+        private readonly IWorkLoadRepository _workLoadRepository;
+        public ObligationController(IObligationRepository repository, IDebtRepository debtRepository, IWorkLoadRepository workLoadRepository) : base(repository)
         {
             _repository = repository;
             _debtRepository = debtRepository;
+            _workLoadRepository = workLoadRepository;
         }
 
-        [HttpPost("Adeudo")]
-        public async Task<ActionResult<IEnumerable<WorkLoad>>> SetDebts([FromBody] Debt model)
+        [HttpPost("Adeudo/{workLoadRegistryId}")]
+        public async Task<ActionResult<IEnumerable<WorkLoad>>> SetDebts([FromBody] Debt model, [FromRoute]long workLoadRegistryId)
         {
             try
             {
+                await _workLoadRepository.UpdateRegistry(workLoadRegistryId);
                 return Ok(await _debtRepository.Create(model));
             }
             catch (Exception ex)

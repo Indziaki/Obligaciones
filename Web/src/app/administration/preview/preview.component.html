@@ -1,0 +1,52 @@
+<div mat-dialog-content class="pdf-container">
+      <header class="clearfix">
+        <div id="logo">
+          <img src="http://wrmx00.epimg.net/radio/imagenes/2018/12/01/nacional/1543676391_533142_1543676844_sumario_normal.jpg">
+        </div>
+        <h1>FOLIO 3-2-1</h1>
+        
+        <div id="company" class="clearfix">
+          <div><span></span> {{debt.type == 1 ? 'Multa':'Liquidación'}} </div>
+          <div><span>Impuesto</span> {{debt.taxType == 1 ? 'Federal':'Estatal'}}</div>
+          <div><span>Origen</span> {{debt.origin == 1 ? 'Auditoría':'Vigilancia de operaciones'}}</div>
+          <div><span>&nbsp;</span></div>
+        </div>
+        <div id="project">
+          <div><span>NOMBRE</span> {{debt.name}} </div>
+          <div><span>RFC</span> {{debt.rfc}}</div>
+          <div><span>DIRECCIÓN</span> {{debt.address}}</div>
+          <div><span>&nbsp;</span></div>
+          <div><span>EMISIÓN</span> {{now | date:'dd/MM/yyyy'}} </div>
+          <div><span>VIGENCIA</span> {{debt.validity | date:'dd/MM/yyyy'}} </div>
+        </div>
+      </header>
+      <main>
+        <table>
+          <thead>
+            <tr>
+              <th class="service">CLAVE</th>
+              <th class="desc">OBLIGACIÓN</th>
+              <th>FUNDAMENTO</th>
+              <th>TIPO PERSONA</th>
+              <th>TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="service">{{debt.obligation.key}}</td>
+              <td class="desc">{{debt.obligation.description}}</td>
+              <td class="unit">{{debt.obligation.fundament}}</td>
+              <td class="qty">{{debt.obligation.personType == 1 ? 'Física' : 'Moral'}}</td>
+              <td class="total">{{debt.total | currency}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div id="notices">
+          <div>NOTA:</div>
+          <div class="notice">El pago tiene una vigencia de 30 días.</div>
+        </div>
+      </main>
+      <footer>
+        Este documento es de caracter oficial, está prohibida su reproducción parcial o total.
+      </footer>
+</div>

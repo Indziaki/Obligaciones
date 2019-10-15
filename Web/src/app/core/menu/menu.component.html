@@ -6,6 +6,7 @@
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item [routerLink]="'administration/workloads'">Cargas de trabajo</a>
+      <a mat-list-item (click)="logout()">Cerrar sesión</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

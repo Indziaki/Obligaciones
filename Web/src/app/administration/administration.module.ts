@@ -7,16 +7,18 @@ import { ContributorComponent } from './contributor/contributor.component';
 import { CoreModule } from '../core/core.module';
 import { AdministrationRoutingModule } from './administration-routing.module';
 import { DebtComponent } from './debt/debt.component';
+import { PreviewComponent } from './preview/preview.component';
 
 @NgModule({
-  declarations: [WorkLoadsComponent, ContributorsComponent, WorkLoadComponent, ContributorComponent, DebtComponent],
+  declarations: [WorkLoadsComponent, ContributorsComponent, WorkLoadComponent, ContributorComponent, DebtComponent, PreviewComponent],
   imports: [
     CommonModule,
     AdministrationRoutingModule,
     CoreModule
   ],
   entryComponents: [
-    DebtComponent
+    DebtComponent,
+    PreviewComponent
   ]
 })
 export class AdministrationModule { }
